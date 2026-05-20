@@ -1,0 +1,46 @@
+common:
+  app_name:
+    zh-CN: DFile
+    en-US: DFile
+  save:
+    zh-CN: 保存
+    en-US: Save
+  cancel:
+    zh-CN: 取消
+    en-US: Cancel
+  delete:
+    zh-CN: 删除
+    en-US: Delete
+  download:
+    zh-CN: 下载
+    en-US: Download
+  upload:
+    zh-CN: 上传
+    en-US: Upload
+  search:
+    zh-CN: 搜索
+    en-US: Search
+  items:
+    zh-CN: 个项目
+    en-US: items
+  selected:
+    zh-CN: 已选
+    en-US: selected
+  no_device:
+    zh-CN: 未连接设备
+    en-US: No device connected
+  scanning:
+    zh-CN: 扫描中...
+    en-US: Scanning...
+  loading:
+    zh-CN: 加载中...
+    en-US: Loading...
+  empty_directory:
+    zh-CN: 空目录
+    en-US: Empty directory
+  free:
+    zh-CN: 可用
+    en-US: free
+  no_active_transfers:
+    zh-CN: 没有进行中的传输
+    en-US: No active transfers

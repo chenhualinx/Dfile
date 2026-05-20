@@ -1,0 +1,22 @@
+transfer:
+  transfers:
+    zh-CN: 传输队列
+    en-US: Transfers
+  downloading:
+    zh-CN: 下载中
+    en-US: Downloading
+  uploading:
+    zh-CN: 上传中
+    en-US: Uploading
+  completed:
+    zh-CN: 已完成
+    en-US: Completed
+  failed:
+    zh-CN: 失败
+    en-US: Failed
+  cancel:
+    zh-CN: 取消
+    en-US: Cancel
+  retry:
+    zh-CN: 重试
+    en-US: Retry

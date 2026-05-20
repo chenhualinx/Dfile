@@ -1,0 +1,51 @@
+{
+  "error": {
+    "error": {
+      "generic_error": "An error occurred",
+      "device_not_found": "Device not found",
+      "connection_failed": "Connection failed",
+      "transfer_failed": "Transfer failed",
+      "permission_denied": "Permission denied"
+    }
+  },
+  "common": {
+    "common": {
+      "app_name": "DFile",
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "download": "Download",
+      "upload": "Upload",
+      "search": "Search",
+      "items": "items",
+      "selected": "selected",
+      "no_device": "No device connected",
+      "scanning": "Scanning...",
+      "loading": "Loading...",
+      "empty_directory": "Empty directory",
+      "free": "free",
+      "no_active_transfers": "No active transfers"
+    }
+  },
+  "transfer": {
+    "transfer": {
+      "transfers": "Transfers",
+      "downloading": "Downloading",
+      "uploading": "Uploading",
+      "completed": "Completed",
+      "failed": "Failed",
+      "cancel": "Cancel",
+      "retry": "Retry"
+    }
+  },
+  "device": {
+    "device": {
+      "devices": "Devices",
+      "storage": "Storage",
+      "internal_storage": "Internal Storage",
+      "sd_card": "SD Card",
+      "connect": "Connect",
+      "disconnect": "Disconnect"
+    }
+  }
+}

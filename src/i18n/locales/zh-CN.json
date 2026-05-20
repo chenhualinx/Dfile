@@ -1,0 +1,51 @@
+{
+  "error": {
+    "error": {
+      "generic_error": "发生错误",
+      "device_not_found": "未找到设备",
+      "connection_failed": "连接失败",
+      "transfer_failed": "传输失败",
+      "permission_denied": "权限被拒绝"
+    }
+  },
+  "common": {
+    "common": {
+      "app_name": "DFile",
+      "save": "保存",
+      "cancel": "取消",
+      "delete": "删除",
+      "download": "下载",
+      "upload": "上传",
+      "search": "搜索",
+      "items": "个项目",
+      "selected": "已选",
+      "no_device": "未连接设备",
+      "scanning": "扫描中...",
+      "loading": "加载中...",
+      "empty_directory": "空目录",
+      "free": "可用",
+      "no_active_transfers": "没有进行中的传输"
+    }
+  },
+  "transfer": {
+    "transfer": {
+      "transfers": "传输队列",
+      "downloading": "下载中",
+      "uploading": "上传中",
+      "completed": "已完成",
+      "failed": "失败",
+      "cancel": "取消",
+      "retry": "重试"
+    }
+  },
+  "device": {
+    "device": {
+      "devices": "设备",
+      "storage": "存储",
+      "internal_storage": "内部存储",
+      "sd_card": "SD 卡",
+      "connect": "连接",
+      "disconnect": "断开"
+    }
+  }
+}
