@@ -10,6 +10,7 @@ pub fn run() {
             commands::session::disconnect_device,
             commands::session::list_connected_devices,
             commands::file::list_objects,
+            commands::file::refresh_directory,
             commands::file::get_object_info,
             commands::transfer::download_file,
             commands::transfer::upload_file,

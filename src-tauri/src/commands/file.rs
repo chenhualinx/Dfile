@@ -1,6 +1,24 @@
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
+use std::sync::{LazyLock, Mutex};
 
-#[derive(Debug, Serialize, Deserialize)]
+type DirCacheKey = (u32, u32);
+static DIR_CACHE: LazyLock<Mutex<HashMap<DirCacheKey, Vec<FileEntry>>>> =
+    LazyLock::new(|| Mutex::new(HashMap::new()));
+
+pub fn invalidate_dir_cache(storage_id: u32, parent_handle: u32) {
+    if let Ok(mut cache) = DIR_CACHE.lock() {
+        cache.remove(&(storage_id, parent_handle));
+    }
+}
+
+pub fn clear_all_dir_caches() {
+    if let Ok(mut cache) = DIR_CACHE.lock() {
+        cache.clear();
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct FileEntry {
     pub handle: u32,
     pub name: String,
@@ -26,6 +44,25 @@ pub async fn list_objects(
     offset: u32,
     count: u32,
 ) -> Result<PaginatedResult, String> {
+    let cache_key = (storage_id, parent_handle);
+
+    // Try cache first
+    {
+        if let Ok(cache) = DIR_CACHE.lock() {
+            if let Some(all) = cache.get(&cache_key) {
+                let total = all.len() as u32;
+                let entries: Vec<FileEntry> = all
+                    .iter()
+                    .skip(offset as usize)
+                    .take(count as usize)
+                    .cloned()
+                    .collect();
+                return Ok(PaginatedResult { entries, total, offset, count });
+            }
+        }
+    }
+
+    // Cache miss — fetch from device
     let storage = {
         let guard = crate::commands::session::DEVICE.lock().await;
         let cd: &crate::commands::session::ConnectedDevice = guard.as_ref().ok_or("No device connected")?;
@@ -34,34 +71,48 @@ pub async fn list_objects(
     };
 
     let parent = if parent_handle == 0xFFFFFFFF { None } else { Some(mtp_rs::ObjectHandle(parent_handle)) };
-    let mut listing = storage.list_objects_stream(parent).await
+    let all_objects = storage.list_objects(parent).await
         .map_err(|e| format!("list objects: {}", e))?;
 
-    let total = listing.total() as u32;
-    let mut entries = Vec::new();
-    let mut idx = 0u32;
-    let end = offset + count;
-
-    while let Some(result) = listing.next().await {
-        let obj = result.map_err(|e| format!("get object info: {}", e))?;
-        if idx >= offset && idx < end {
+    let all_entries: Vec<FileEntry> = all_objects.into_iter()
+        .map(|obj| {
             let is_folder = obj.is_folder();
-            entries.push(FileEntry {
+            FileEntry {
                 handle: obj.handle.0,
                 name: obj.filename,
                 size: obj.size,
                 is_directory: is_folder,
                 date_modified: obj.modified.map(|dt| format!("{:04}-{:02}-{:02}", dt.year, dt.month, dt.day)).unwrap_or_default(),
                 mime_type: if is_folder { "folder".into() } else { "application/octet-stream".into() },
-            });
-        }
-        idx += 1;
-        if idx >= end {
-            break;
+            }
+        })
+        .collect();
+
+    let total = all_entries.len() as u32;
+
+    // Store in cache
+    {
+        if let Ok(mut cache) = DIR_CACHE.lock() {
+            cache.insert(cache_key, all_entries.clone());
         }
     }
 
+    let entries: Vec<FileEntry> = all_entries.into_iter()
+        .skip(offset as usize)
+        .take(count as usize)
+        .collect();
+
     Ok(PaginatedResult { entries, total, offset, count })
+}
+
+#[tauri::command]
+pub async fn refresh_directory(
+    _device_id: String,
+    storage_id: u32,
+    parent_handle: u32,
+) -> Result<(), String> {
+    invalidate_dir_cache(storage_id, parent_handle);
+    Ok(())
 }
 
 #[tauri::command]

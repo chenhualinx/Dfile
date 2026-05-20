@@ -159,7 +159,7 @@ export function FileTable({ entries, totalItems, viewMode, selected, onSelection
             ))}
           </div>
         )}
-        {hasNextPage && (
+        {hasNextPage && totalItems != null && entries.length < totalItems && (
           <div ref={sentinelRef} className="flex items-center justify-center py-3 text-xs text-muted-foreground">
             {isLoadingMore ? (
               <span className="flex items-center gap-2">

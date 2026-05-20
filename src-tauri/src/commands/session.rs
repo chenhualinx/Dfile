@@ -93,6 +93,8 @@ pub async fn disconnect_device(device_id: String) -> Result<(), String> {
     if let Some(cd) = guard.take() {
         cd.device.close().await.map_err(|e| e.to_string())?;
     }
+    drop(guard);
+    crate::commands::file::clear_all_dir_caches();
     Ok(())
 }
 
