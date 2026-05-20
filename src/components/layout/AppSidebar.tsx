@@ -3,6 +3,7 @@ import { useDevices, useConnectDevice } from "@/hooks/use-devices"
 import { useQueryClient } from "@tanstack/react-query"
 import { invoke } from "@tauri-apps/api/core"
 import { LanguageSwitcher } from "./LanguageSwitcher"
+import { ThemeToggle } from "@/components/theme/ThemeToggle"
 
 interface AppSidebarProps {
   selectedDevice: string | null
@@ -41,7 +42,10 @@ export function AppSidebar({ selectedDevice, onSelectDevice, onSelectStorage }: 
           <Smartphone className="size-5" />
           <span className="font-semibold text-sm">DFile</span>
         </div>
-        <LanguageSwitcher />
+        <div className="flex items-center gap-1">
+          <ThemeToggle />
+          <LanguageSwitcher />
+        </div>
       </div>
       <div className="flex-1 overflow-auto p-2 space-y-4">
         <div>
