@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { ArrowLeft, ArrowUp, Search, List, Grid3X3, Loader2, FolderOpen, RefreshCw, X } from "lucide-react"
 import { invoke } from "@tauri-apps/api/core"
+import { save } from "@tauri-apps/plugin-dialog"
 import { BreadcrumbNav } from "./BreadcrumbNav"
 import { FileTable } from "./FileTable"
 import { KeyboardShortcutsHelp } from "./KeyboardShortcutsHelp"
@@ -79,14 +80,22 @@ export function FileBrowser({ deviceId, storageId }: FileBrowserProps) {
   const handleDownload = useCallback(async (handles: number[]) => {
     if (!deviceId) return
     for (const h of handles) {
+      const entry = entries.find((e) => e.handle === h)
+      if (!entry) continue
+
+      const filePath = await save({
+        defaultPath: entry.name,
+      })
+      if (!filePath) continue
+
       await invoke("download_file", {
         deviceId,
         objectHandle: h,
-        destPath: `~/Downloads/${h}`,
+        destPath: filePath,
       }).catch(console.error)
     }
     setSelected(new Set())
-  }, [deviceId])
+  }, [deviceId, entries])
 
   const handleDelete = useCallback(async (handles: number[]) => {
     if (!deviceId || !window.confirm(`Delete ${handles.length} item(s)?`)) return
