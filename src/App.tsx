@@ -31,7 +31,7 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-background text-foreground">
+    <div className="flex h-screen w-screen overflow-hidden bg-background text-foreground fixed inset-0">
       <AppSidebar
         selectedDevice={selectedDevice}
         onSelectDevice={setSelectedDevice}
