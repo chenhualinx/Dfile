@@ -34,23 +34,32 @@ pub async fn list_objects(
     };
 
     let parent = if parent_handle == 0xFFFFFFFF { None } else { Some(mtp_rs::ObjectHandle(parent_handle)) };
-    let all_objects = storage.list_objects(parent).await
+    let mut listing = storage.list_objects_stream(parent).await
         .map_err(|e| format!("list objects: {}", e))?;
 
-    let total = all_objects.len() as u32;
-    let slice: Vec<_> = all_objects.into_iter().skip(offset as usize).take(count as usize).collect();
+    let total = listing.total() as u32;
+    let mut entries = Vec::new();
+    let mut idx = 0u32;
+    let end = offset + count;
 
-    let entries: Vec<FileEntry> = slice.into_iter().map(|obj| {
-        let is_folder = obj.is_folder();
-        FileEntry {
-            handle: obj.handle.0,
-            name: obj.filename,
-            size: obj.size,
-            is_directory: is_folder,
-                    date_modified: obj.modified.map(|dt| format!("{:04}-{:02}-{:02}", dt.year, dt.month, dt.day)).unwrap_or_default(),
-            mime_type: if is_folder { "folder".into() } else { "application/octet-stream".into() },
+    while let Some(result) = listing.next().await {
+        let obj = result.map_err(|e| format!("get object info: {}", e))?;
+        if idx >= offset && idx < end {
+            let is_folder = obj.is_folder();
+            entries.push(FileEntry {
+                handle: obj.handle.0,
+                name: obj.filename,
+                size: obj.size,
+                is_directory: is_folder,
+                date_modified: obj.modified.map(|dt| format!("{:04}-{:02}-{:02}", dt.year, dt.month, dt.day)).unwrap_or_default(),
+                mime_type: if is_folder { "folder".into() } else { "application/octet-stream".into() },
+            });
         }
-    }).collect();
+        idx += 1;
+        if idx >= end {
+            break;
+        }
+    }
 
     Ok(PaginatedResult { entries, total, offset, count })
 }

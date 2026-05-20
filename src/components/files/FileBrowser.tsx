@@ -7,7 +7,7 @@ import { BreadcrumbNav } from "./BreadcrumbNav"
 import { FileTable } from "./FileTable"
 import { KeyboardShortcutsHelp } from "./KeyboardShortcutsHelp"
 import { useKeyboard } from "@/hooks/use-keyboard"
-import { useDirectory, useDevices } from "@/hooks/use-devices"
+import { useInfiniteDirectory, useDevices } from "@/hooks/use-devices"
 import { useQueryClient } from "@tanstack/react-query"
 
 interface FileBrowserProps {
@@ -41,7 +41,15 @@ export function FileBrowser({ deviceId, storageId }: FileBrowserProps) {
   }, [devices?.length, deviceId, queryClient])
 
   const currentHandle = pathStack[pathStack.length - 1]?.handle ?? 0xFFFFFFFF
-  const { data, isLoading, isError, error } = useDirectory(deviceId, storageId, currentHandle, 0, 10)
+  const {
+    data,
+    isLoading,
+    isError,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteDirectory(deviceId, storageId, currentHandle, 200)
 
   const navigateTo = useCallback((handle: number, name: string) => {
     setPathStack((prev) => [...prev, { handle, name }])
@@ -58,8 +66,10 @@ export function FileBrowser({ deviceId, storageId }: FileBrowserProps) {
     searchTimer.current = window.setTimeout(() => setSearchQuery(value), 300)
   }, [])
 
+  const totalItems = data?.pages[0]?.total ?? 0
+
   const entries = useMemo(() => {
-    const all = data?.entries ?? []
+    const all = data?.pages.flatMap((p) => p.entries) ?? []
     if (!searchQuery) return all
     const q = searchQuery.toLowerCase()
     return all.filter((e) => e.name.toLowerCase().includes(q))
@@ -197,19 +207,23 @@ export function FileBrowser({ deviceId, storageId }: FileBrowserProps) {
           <div className="h-full">
             <FileTable
               entries={entries}
+              totalItems={totalItems}
               viewMode={viewMode}
               selected={selected}
               onSelectionChange={setSelected}
               onNavigate={navigateTo}
               onDownload={handleDownload}
               onDelete={handleDelete}
+              onLoadMore={fetchNextPage}
+              hasNextPage={hasNextPage ?? false}
+              isLoadingMore={isFetchingNextPage}
             />
           </div>
         )}
       </div>
 
       <div className="flex items-center justify-between border-t px-4 py-1.5 text-xs text-muted-foreground">
-        <span>{entries.length} items</span>
+        <span>{searchQuery ? `${entries.length} items` : entries.length < totalItems ? `${entries.length} of ${totalItems} items` : `${totalItems} items`}</span>
         <span className="text-muted-foreground/50">⌘/ for shortcuts</span>
       </div>
       <KeyboardShortcutsHelp open={showShortcuts} onClose={() => setShowShortcuts(false)} />

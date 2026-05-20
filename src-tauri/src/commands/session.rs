@@ -8,6 +8,23 @@ pub struct ConnectedDevice {
 pub static DEVICE: std::sync::LazyLock<Mutex<Option<ConnectedDevice>>> =
     std::sync::LazyLock::new(|| Mutex::new(None));
 
+async fn open_device_with_retry(device_id: &str) -> Result<mtp_rs::mtp::MtpDevice, String> {
+    let mut last_err = String::new();
+    for attempt in 0..3 {
+        if attempt > 0 {
+            tokio::time::sleep(std::time::Duration::from_millis(500)).await;
+        }
+        match mtp_rs::mtp::MtpDeviceBuilder::new()
+            .open_by_serial(device_id)
+            .await
+        {
+            Ok(device) => return Ok(device),
+            Err(e) => last_err = format!("connect failed: {}", e),
+        }
+    }
+    Err(last_err)
+}
+
 #[tauri::command]
 pub async fn connect_device(device_id: String) -> Result<serde_json::Value, String> {
     // If already connected to this device, return stored info
@@ -38,10 +55,7 @@ pub async fn connect_device(device_id: String) -> Result<serde_json::Value, Stri
         }
     }
 
-    let device = mtp_rs::mtp::MtpDeviceBuilder::new()
-        .open_by_serial(&device_id)
-        .await
-        .map_err(|e| format!("connect failed: {}", e))?;
+    let device = open_device_with_retry(&device_id).await?;
 
     let info = device.device_info();
     let storages = device.storages().await

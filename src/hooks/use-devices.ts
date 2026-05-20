@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query"
 import { invoke } from "@tauri-apps/api/core"
 
 export interface DeviceInfo {
@@ -111,6 +111,34 @@ export function useStorageInfo(deviceId: string | null) {
     },
     enabled: !!deviceId,
     staleTime: 5000,
+  })
+}
+
+export function useInfiniteDirectory(
+  deviceId: string | null,
+  storageId: number | null,
+  parentHandle: number,
+  pageSize: number = 100,
+) {
+  return useInfiniteQuery({
+    queryKey: ["directory", deviceId, storageId, parentHandle],
+    queryFn: async ({ pageParam }) => {
+      if (!deviceId || storageId === null) throw new Error("No device or storage selected")
+      return await invoke<PaginatedResult>("list_objects", {
+        deviceId,
+        storageId,
+        parentHandle,
+        offset: pageParam,
+        count: pageSize,
+      })
+    },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => {
+      const nextOffset = lastPage.offset + lastPage.count
+      return nextOffset < lastPage.total ? nextOffset : undefined
+    },
+    enabled: !!deviceId && storageId !== null,
+    staleTime: 2000,
   })
 }
 
