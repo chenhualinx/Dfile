@@ -4,6 +4,7 @@ import { Loader2 } from "lucide-react"
 import { AppSidebar } from "@/components/layout/AppSidebar"
 import { FileBrowser } from "@/components/files/FileBrowser"
 import { TransferQueuePanel } from "@/components/transfer/TransferQueuePanel"
+import { PermissionGate } from "@/components/layout/PermissionGate"
 import "./App.css"
 
 function App() {

@@ -23,7 +23,8 @@ export function LanguageSwitcher() {
   const [open, setOpen] = useState(false)
   const { i18n } = useTranslation()
 
-  const switchLang = async (code: string) => {
+  const switchLang = async (code: string | null) => {
+    if (!code) return
     await i18n.changeLanguage(code)
     try { await invoke("set_language", { lang: code }) } catch {}
   }

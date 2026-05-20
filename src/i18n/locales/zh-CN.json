@@ -38,6 +38,12 @@
       "retry": "重试"
     }
   },
+  "permission": {
+    "usb_denied_title": "需要 USB 权限",
+    "usb_denied_description": "DFile 需要 USB 访问权限才能连接 Android 设备。请在系统设置中授予权限。",
+    "open_system_settings": "打开系统设置",
+    "usb_denied_guide": "前往 系统设置 > 隐私与安全性 > USB 设备，允许 DFile 访问 USB 设备"
+  },
   "device": {
     "device": {
       "devices": "设备",

@@ -140,6 +140,19 @@ export function AppSidebar({ selectedDevice, onSelectDevice, onSelectStorage }: 
           </div>
         )}
       </div>
+      <div className="border-t px-3 py-2 text-[10px] text-muted-foreground/50 flex items-center justify-between">
+        <span>DFile v0.1.0</span>
+        <a
+          href="#"
+          onClick={(e) => {
+            e.preventDefault()
+            window.open("https://dfile.app/privacy", "_blank")
+          }}
+          className="hover:text-foreground/70 transition-colors"
+        >
+          Privacy
+        </a>
+      </div>
     </div>
   )
 }

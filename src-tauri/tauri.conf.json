@@ -10,7 +10,7 @@
     "frontendDist": "../dist"
   },
   "app": {
-    "macOSPrivateApi": true,
+    "macOSPrivateApi": false,
     "windows": [
       {
         "label": "main",
@@ -46,8 +46,9 @@
       "exceptionDomain": "",
       "frameworks": [],
       "providerShortName": "",
-      "signingIdentity": "-",
-      "entitlements": "entitlements.plist"
+      "signingIdentity": "3rd Party Mac Developer Application: simin he (7LAVM7DP77)",
+      "entitlements": "./entitlements.plist",
+      "infoPlist": "Info.plist"
     },
     "category": "Utility"
   }

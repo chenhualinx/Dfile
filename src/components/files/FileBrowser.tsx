@@ -25,6 +25,7 @@ export function FileBrowser({ deviceId, storageId }: FileBrowserProps) {
   ])
   const [selected, setSelected] = useState<Set<number>>(new Set())
   const [showShortcuts, setShowShortcuts] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const searchTimer = useRef<number | undefined>(undefined)
   const searchInputRef = useRef<HTMLInputElement>(null)
   const queryClient = useQueryClient()
@@ -88,11 +89,17 @@ export function FileBrowser({ deviceId, storageId }: FileBrowserProps) {
       })
       if (!filePath) continue
 
-      await invoke("download_file", {
-        deviceId,
-        objectHandle: h,
-        destPath: filePath,
-      }).catch(console.error)
+      try {
+        await invoke("download_file", {
+          deviceId,
+          objectHandle: h,
+          destPath: filePath,
+        })
+      } catch (err) {
+        const msg = typeof err === "string" ? err : err instanceof Error ? err.message : "Download failed"
+        setErrorMessage(msg)
+        setTimeout(() => setErrorMessage(null), 5000)
+      }
     }
     setSelected(new Set())
   }, [deviceId, entries])
@@ -263,6 +270,11 @@ export function FileBrowser({ deviceId, storageId }: FileBrowserProps) {
         <span>{searchQuery ? `${entries.length} items` : entries.length < totalItems ? `${entries.length} of ${totalItems} items` : `${totalItems} items`}</span>
         <span className="text-muted-foreground/50">⌘/ for shortcuts</span>
       </div>
+      {errorMessage && (
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 bg-destructive/10 border border-destructive/30 text-destructive text-xs px-4 py-2 rounded-lg shadow-lg">
+          {errorMessage}
+        </div>
+      )}
       <KeyboardShortcutsHelp open={showShortcuts} onClose={() => setShowShortcuts(false)} />
     </div>
   )

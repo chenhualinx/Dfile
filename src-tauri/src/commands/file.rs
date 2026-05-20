@@ -82,7 +82,7 @@ pub async fn list_objects(
                 name: obj.filename,
                 size: obj.size,
                 is_directory: is_folder,
-                date_modified: obj.modified.map(|dt| format!("{:04}-{:02}-{:02}", dt.year, dt.month, dt.day)).unwrap_or_default(),
+                date_modified: obj.modified.map(|dt| format!("{:04}-{:02}-{:02} {:02}:{:02}:{:02}", dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second)).unwrap_or_default(),
                 mime_type: if is_folder { "folder".into() } else { "application/octet-stream".into() },
             }
         })

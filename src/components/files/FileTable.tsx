@@ -105,7 +105,7 @@ export function FileTable({ entries, totalItems, viewMode, selected, onSelection
           <Checkbox checked={allSelected} onCheckedChange={toggleAll} className="mr-2" />
           <span className="flex-1">Name</span>
           <span className="w-20 text-right">Size</span>
-          <span className="w-36">Date Modified</span>
+          <span className="w-36 font-mono">Date Modified</span>
         </div>
       )}
 
@@ -136,7 +136,7 @@ export function FileTable({ entries, totalItems, viewMode, selected, onSelection
                   <span className="w-20 text-right text-muted-foreground">
                     {entry.is_directory ? "--" : formatSize(entry.size)}
                   </span>
-                  <span className="w-36 text-xs text-muted-foreground">{entry.date_modified}</span>
+                  <span className="w-36 text-xs text-muted-foreground font-mono">{entry.date_modified}</span>
                 </div>
               )
             })}

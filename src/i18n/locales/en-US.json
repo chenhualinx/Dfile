@@ -38,6 +38,12 @@
       "retry": "Retry"
     }
   },
+  "permission": {
+    "usb_denied_title": "USB Permission Required",
+    "usb_denied_description": "DFile needs USB access permission to connect to Android devices. Please grant it in System Settings.",
+    "open_system_settings": "Open System Settings",
+    "usb_denied_guide": "Go to System Settings > Privacy & Security > USB Devices and allow DFile"
+  },
   "device": {
     "device": {
       "devices": "Devices",

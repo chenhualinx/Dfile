@@ -1,0 +1,12 @@
+usb_denied_title:
+  zh-CN: 需要 USB 权限
+  en-US: USB Permission Required
+usb_denied_description:
+  zh-CN: DFile 需要 USB 访问权限才能连接 Android 设备。请在系统设置中授予权限。
+  en-US: DFile needs USB access permission to connect to Android devices. Please grant it in System Settings.
+open_system_settings:
+  zh-CN: 打开系统设置
+  en-US: Open System Settings
+usb_denied_guide:
+  zh-CN: 前往 系统设置 > 隐私与安全性 > USB 设备，允许 DFile 访问 USB 设备
+  en-US: Go to System Settings > Privacy & Security > USB Devices and allow DFile

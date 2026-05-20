@@ -18,6 +18,7 @@ pub fn run() {
             commands::transfer::batch_download,
             commands::transfer::delete_objects,
             commands::transfer::cancel_transfer,
+            commands::check_usb_permission,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

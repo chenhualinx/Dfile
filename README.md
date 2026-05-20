@@ -16,6 +16,22 @@
 
 ---
 
+## Screenshots
+
+<div align="center">
+
+**File Browser - List View**
+
+<img src="docs/images/截屏2026-05-21%2001.10.12.png" alt="File Browser List View" width="800"/>
+
+**File Browser - Grid View**
+
+<img src="docs/images/截屏2026-05-21%2001.10.20.png" alt="File Browser Grid View" width="800"/>
+
+</div>
+
+---
+
 ## Features
 
 - **Device Connection** — Connect to Android devices via MTP protocol
