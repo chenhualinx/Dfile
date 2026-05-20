@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef, useMemo, useEffect } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 import { ArrowLeft, ArrowUp, Search, List, Grid3X3, Loader2, FolderOpen, RefreshCw, X } from "lucide-react"
 import { invoke } from "@tauri-apps/api/core"
 import { BreadcrumbNav } from "./BreadcrumbNav"
@@ -128,11 +129,16 @@ export function FileBrowser({ deviceId, storageId }: FileBrowserProps) {
         </div>
       )}
       <div className="relative flex items-center gap-2 border-b px-4 py-2">
-        <Button variant="ghost" size="icon" className="size-8" onClick={goBack}>
-          <ArrowLeft className="size-4" />
-        </Button>
-        <Button variant="ghost" size="icon" className="size-8" onClick={goBack}>
-          <ArrowUp className="size-4" />
+        {/* 返回上一级目录 */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="size-8 hover:bg-accent/80 active:scale-95 transition-all duration-150"
+          onClick={goBack}
+          disabled={pathStack.length <= 1}
+          title="返回上一级 (Backspace)"
+        >
+          <ArrowLeft className={cn("size-4", pathStack.length <= 1 && "opacity-30")} />
         </Button>
         <div className="flex-1" />
         <div className="relative w-64">
@@ -165,10 +171,30 @@ export function FileBrowser({ deviceId, storageId }: FileBrowserProps) {
             <X className="size-3" />
           </button>
         </div>
-        <Button variant="ghost" size="icon" className="size-8" onClick={() => setViewMode("list")}>
+        {/* 列表视图切换 */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className={cn(
+            "size-8 hover:bg-accent/80 active:scale-95 transition-all duration-150",
+            viewMode === "list" && "bg-accent text-accent-foreground"
+          )}
+          onClick={() => setViewMode("list")}
+          title="列表视图"
+        >
           <List className="size-4" />
         </Button>
-        <Button variant="ghost" size="icon" className="size-8" onClick={() => setViewMode("grid")}>
+        {/* 网格视图切换 */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className={cn(
+            "size-8 hover:bg-accent/80 active:scale-95 transition-all duration-150",
+            viewMode === "grid" && "bg-accent text-accent-foreground"
+          )}
+          onClick={() => setViewMode("grid")}
+          title="网格视图"
+        >
           <Grid3X3 className="size-4" />
         </Button>
         <Button variant="ghost" size="icon" className="size-8" onClick={() => queryClient.invalidateQueries({ queryKey: ["directory"] })}>
