@@ -37,12 +37,11 @@ export function AppSidebar({ selectedDevice, onSelectDevice, onSelectStorage }: 
 
   return (
     <div className="w-64 flex-shrink-0 border-r bg-sidebar flex flex-col">
-      <div className="flex items-center justify-between px-4 h-12 border-b">
-        <div className="flex items-center gap-2">
-          <Smartphone className="size-5" />
-          <span className="font-semibold text-sm">DFile</span>
-        </div>
-        <div className="flex items-center gap-1">
+      {/* 侧边栏头部 - 与侧边栏背景色一致，为 macOS 红绿灯按钮留出空间 */}
+      <div className="relative flex items-center justify-end pl-[92px] pr-2 h-[48px] border-b bg-sidebar">
+        {/* 拖拽区域 - 覆盖整个头部但不包括按钮 */}
+        <div className="absolute inset-0 sidebar-drag-region" data-tauri-drag-region />
+        <div className="relative flex items-center gap-1 z-10">
           <ThemeToggle />
           <LanguageSwitcher />
         </div>
@@ -52,7 +51,7 @@ export function AppSidebar({ selectedDevice, onSelectDevice, onSelectStorage }: 
           <div className="flex items-center justify-between px-2 py-1">
             <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Devices</span>
             <button className="text-muted-foreground hover:text-foreground" onClick={rescan} title="Rescan USB devices">
-              <RefreshCw className={`size-3 ${isFetching ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`size-4 ${isFetching ? 'animate-spin' : ''}`} />
             </button>
           </div>
           <div className="space-y-0.5 mt-1">
@@ -64,7 +63,7 @@ export function AppSidebar({ selectedDevice, onSelectDevice, onSelectStorage }: 
             )}
             {isLoading && (
               <div className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground">
-                <Loader2 className="size-3 animate-spin" />
+                <Loader2 className="size-4 animate-spin" />
                 Scanning...
               </div>
             )}
@@ -84,7 +83,7 @@ export function AppSidebar({ selectedDevice, onSelectDevice, onSelectStorage }: 
                 onClick={() => handleDeviceClick(device.id)}
               >
                 {isConnecting && selectedDevice === device.id ? (
-                  <Loader2 className="size-3 animate-spin flex-shrink-0" />
+                  <Loader2 className="size-4 animate-spin flex-shrink-0" />
                 ) : (
                   <Smartphone className="size-4 flex-shrink-0" />
                 )}
@@ -92,7 +91,7 @@ export function AppSidebar({ selectedDevice, onSelectDevice, onSelectStorage }: 
                 {selectedDevice === device.id && (
                   <span title="Disconnect" className="flex-shrink-0">
                     <X
-                      className="size-3.5 text-muted-foreground/50 group-hover:text-destructive transition-colors cursor-pointer"
+                      className="size-4 text-muted-foreground/50 group-hover:text-destructive transition-colors cursor-pointer"
                       onClick={async (e) => {
                         e.stopPropagation()
                         try { await invoke("disconnect_device", { deviceId: device.id }) } catch {}

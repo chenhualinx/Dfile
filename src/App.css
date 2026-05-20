@@ -115,3 +115,32 @@
     font-family: ui-sans-serif, system-ui, sans-serif;
   }
 }
+
+/* macOS 透明标题栏样式 */
+@layer components {
+  /* 侧边栏拖拽区域 - 允许用户拖拽窗口 */
+  .sidebar-drag-region {
+    -webkit-app-region: drag;
+    app-region: drag;
+  }
+
+  /* 侧边栏内的按钮不应触发拖拽 */
+  .sidebar-drag-region button,
+  .sidebar-drag-region [role="button"] {
+    -webkit-app-region: no-drag;
+    app-region: no-drag;
+  }
+}
+
+/* macOS Overlay 标题栏样式 */
+[data-tauri-drag-region] {
+  -webkit-app-region: drag;
+  app-region: drag;
+}
+
+[data-tauri-drag-region] button,
+[data-tauri-drag-region] [role="button"],
+[data-tauri-drag-region] input {
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}

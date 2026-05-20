@@ -137,7 +137,8 @@ export function FileBrowser({ deviceId, storageId }: FileBrowserProps) {
           Running in preview mode. Use <code className="font-mono bg-amber-100 px-1 rounded">bun run tauri dev</code> to launch the full app.
         </div>
       )}
-      <div className="relative flex items-center gap-2 border-b px-4 py-2">
+      {/* 右侧标题栏 - 与主内容区背景色一致 */}
+      <div className="relative flex items-center gap-2 border-b px-4 h-[48px] bg-background" data-tauri-drag-region>
         {/* 返回上一级目录 */}
         <Button
           variant="ghost"
@@ -177,7 +178,7 @@ export function FileBrowser({ deviceId, storageId }: FileBrowserProps) {
               }
             }}
           >
-            <X className="size-3" />
+            <X className="size-4" />
           </button>
         </div>
         {/* 列表视图切换 */}
@@ -211,7 +212,8 @@ export function FileBrowser({ deviceId, storageId }: FileBrowserProps) {
         </Button>
       </div>
 
-      <div className="border-b px-4 py-1.5">
+      {/* 面包屑导航栏 - 与主内容区背景色一致 */}
+      <div className="border-b px-4 py-1.5 bg-background">
         <BreadcrumbNav path={pathStack} onNavigate={(i) => setPathStack((prev) => prev.slice(0, i + 1))} />
       </div>
 

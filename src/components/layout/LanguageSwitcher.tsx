@@ -4,7 +4,14 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Settings, Check } from "lucide-react"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Settings } from "lucide-react"
 import { invoke } from "@tauri-apps/api/core"
 
 const languages = [
@@ -19,34 +26,41 @@ export function LanguageSwitcher() {
   const switchLang = async (code: string) => {
     await i18n.changeLanguage(code)
     try { await invoke("set_language", { lang: code }) } catch {}
-    setOpen(false)
   }
 
   return (
     <>
-      <Button variant="ghost" size="sm" className="h-6 text-xs gap-1" onClick={() => setOpen(true)}>
-        <Settings className="size-3" />
-        {i18n.language?.startsWith("zh") ? "语言" : "Language"}
+      <Button variant="ghost" size="icon" className="size-8" onClick={() => setOpen(true)}>
+        <Settings className="size-4" />
       </Button>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="w-72">
+        <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>{i18n.language?.startsWith("zh") ? "选择语言" : "Language"}</DialogTitle>
+            <DialogTitle>{i18n.language?.startsWith("zh") ? "设置" : "Settings"}</DialogTitle>
             <DialogDescription>
-              {i18n.language?.startsWith("zh") ? "切换应用界面语言" : "Switch application language"}
+              {i18n.language?.startsWith("zh") ? "应用设置" : "Application settings"}
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-1">
-            {languages.map((lang) => (
-              <button
-                key={lang.code}
-                className="flex items-center justify-between w-full px-3 py-2 text-sm rounded-md hover:bg-accent"
-                onClick={() => switchLang(lang.code)}
-              >
-                <span>{lang.label}</span>
-                {i18n.language === lang.code && <Check className="size-4 text-primary" />}
-              </button>
-            ))}
+          <div className="space-y-3">
+            <div>
+              <div className="px-3 py-1 text-xs font-medium text-muted-foreground">
+                {i18n.language?.startsWith("zh") ? "语言" : "Language"}
+              </div>
+              <div className="px-3 py-2">
+                <Select value={i18n.language} onValueChange={switchLang}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {languages.map((lang) => (
+                      <SelectItem key={lang.code} value={lang.code}>
+                        {lang.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
           </div>
         </DialogContent>
       </Dialog>

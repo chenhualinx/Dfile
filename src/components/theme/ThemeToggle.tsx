@@ -33,8 +33,8 @@ export function ThemeToggle() {
   return (
     <Button
       variant="ghost"
-      size="sm"
-      className="h-6 w-6 p-0"
+      size="icon"
+      className="size-8"
       onClick={handleClick}
       title={isZh ? `当前: ${currentTitle.zh} (点击切换)` : `Current: ${currentTitle.en} (click to switch)`}
     >

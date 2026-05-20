@@ -10,13 +10,21 @@
     "frontendDist": "../dist"
   },
   "app": {
+    "macOSPrivateApi": true,
     "windows": [
       {
+        "label": "main",
         "title": "DFile",
         "width": 1100,
         "height": 720,
         "minWidth": 800,
-        "minHeight": 500
+        "minHeight": 500,
+        "transparent": true,
+        "decorations": true,
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true,
+        "acceptFirstMouse": true,
+        "shadow": true
       }
     ],
     "security": {
