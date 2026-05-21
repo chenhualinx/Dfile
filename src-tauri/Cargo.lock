@@ -33,22 +33,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "android-file-transfer"
-version = "0.1.0"
-dependencies = [
- "bytes",
- "futures",
- "mtp-rs",
- "serde",
- "serde_json",
- "tauri",
- "tauri-build",
- "tauri-plugin-dialog",
- "tauri-plugin-opener",
- "tokio",
-]
-
-[[package]]
 name = "android_system_properties"
 version = "0.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -706,6 +690,22 @@ dependencies = [
  "quote",
  "rustc_version",
  "syn 2.0.117",
+]
+
+[[package]]
+name = "dfile"
+version = "0.1.0"
+dependencies = [
+ "bytes",
+ "futures",
+ "mtp-rs",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-dialog",
+ "tauri-plugin-opener",
+ "tokio",
 ]
 
 [[package]]
