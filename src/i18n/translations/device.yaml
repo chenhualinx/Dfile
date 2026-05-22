@@ -1,0 +1,19 @@
+device:
+  devices:
+    zh-CN: 设备
+    en-US: Devices
+  storage:
+    zh-CN: 存储
+    en-US: Storage
+  internal_storage:
+    zh-CN: 内部存储
+    en-US: Internal Storage
+  sd_card:
+    zh-CN: SD 卡
+    en-US: SD Card
+  connect:
+    zh-CN: 连接
+    en-US: Connect
+  disconnect:
+    zh-CN: 断开
+    en-US: Disconnect

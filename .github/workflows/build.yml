@@ -1,0 +1,50 @@
+name: Build and Release
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        target: [aarch64-apple-darwin, x86_64-apple-darwin]
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - uses: oven-sh/setup-bun@v2
+      - uses: Swatinem/rust-cache@v2
+        with: { workspaces: "src-tauri" }
+
+      - run: bun install
+
+      - name: Build universal binary
+        run: |
+          cargo build --target aarch64-apple-darwin --release --manifest-path src-tauri/Cargo.toml
+          cargo build --target x86_64-apple-darwin --release --manifest-path src-tauri/Cargo.toml
+          mkdir -p target/universal
+          lipo -create \
+            src-tauri/target/aarch64-apple-darwin/release/dfile \
+            src-tauri/target/x86_64-apple-darwin/release/dfile \
+            -output target/universal/dfile
+
+      - name: Codesign
+        if: github.event_name == 'push'
+        run: |
+          codesign --force --options runtime \
+            --sign "${{ secrets.APPLE_SIGNING_IDENTITY }}" \
+            --entitlements src-tauri/entitlements.plist \
+            target/universal/dfile
+
+      - name: Notarize
+        if: github.event_name == 'push'
+        run: |
+          ditto -c -k --keepParent target/universal/dfile target/dfile-notarize.zip
+          xcrun notarytool submit target/dfile-notarize.zip \
+            --apple-id "${{ secrets.APPLE_ID }}" \
+            --team-id "${{ secrets.APPLE_TEAM_ID }}" \
+            --password "${{ secrets.APPLE_APP_PASSWORD }}" \
+            --wait

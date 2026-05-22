@@ -1,0 +1,16 @@
+error:
+  generic_error:
+    zh-CN: 发生错误
+    en-US: An error occurred
+  device_not_found:
+    zh-CN: 未找到设备
+    en-US: Device not found
+  connection_failed:
+    zh-CN: 连接失败
+    en-US: Connection failed
+  transfer_failed:
+    zh-CN: 传输失败
+    en-US: Transfer failed
+  permission_denied:
+    zh-CN: 权限被拒绝
+    en-US: Permission denied
